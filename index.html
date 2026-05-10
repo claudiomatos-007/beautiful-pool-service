@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Beautiful Pool Service</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue-deep: #020d18;
+    --blue-mid: #041e30;
+    --blue-surface: #062840;
+    --accent: #3ab8e0;
+    --accent-soft: rgba(58,184,224,0.12);
+    --accent-border: rgba(58,184,224,0.25);
+    --text-main: #e8f5ff;
+    --text-muted: rgba(160,215,240,0.65);
+    --text-dim: rgba(120,180,210,0.4);
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--blue-deep);
+    color: var(--text-main);
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── BG atmosphere ─── */
+  .bg-glow {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 70% 40% at 50% 100%, rgba(13,77,107,0.35) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 30% at 80% 20%, rgba(5,35,60,0.5) 0%, transparent 60%);
+  }
+
+  /* ─── WAVES ─── */
+  .wave-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 180px;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+    opacity: 0.4;
+  }
+
+  .wave {
+    position: absolute;
+    bottom: 0;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(180deg, transparent 0%, rgba(13,100,140,0.2) 60%, rgba(8,60,90,0.4) 100%);
+    border-radius: 40% 60% 0 0 / 30% 30% 0 0;
+    animation: waveFloat 7s ease-in-out infinite;
+  }
+  .wave:nth-child(2) { opacity: 0.5; animation-delay: -2.5s; animation-duration: 9s; }
+  .wave:nth-child(3) { opacity: 0.3; animation-delay: -5s; animation-duration: 11s; }
+
+  @keyframes waveFloat {
+    0%,100% { transform: translateX(-25%) translateY(15px); }
+    50% { transform: translateX(-10%) translateY(0); }
+  }
+
+  /* ─── SPARKLES ─── */
+  .sparkle {
+    position: fixed;
+    width: 2px; height: 2px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+    box-shadow: 0 0 6px var(--accent);
+    animation: twinkle 4s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%,100% { opacity: 0; transform: scale(0); }
+    50% { opacity: 0.8; transform: scale(1); }
+  }
+  .sp1 { top: 12%; left: 8%; animation-delay: 0s; }
+  .sp2 { top: 25%; left: 88%; animation-delay: 1.2s; width:3px;height:3px; }
+  .sp3 { top: 45%; left: 5%; animation-delay: 2.4s; }
+  .sp4 { top: 60%; left: 93%; animation-delay: 0.6s; }
+  .sp5 { top: 75%; left: 15%; animation-delay: 3.2s; width:3px;height:3px; }
+
+  /* ─── LAYOUT ─── */
+  .page {
+    position: relative;
+    z-index: 2;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 20px 120px;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    text-align: center;
+    padding: 52px 0 36px;
+    animation: fadeUp 0.7s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border: 1px solid var(--accent-border);
+    border-radius: 100px;
+    padding: 5px 14px;
+    margin-bottom: 22px;
+    background: var(--accent-soft);
+  }
+
+  .hero-badge-dot {
+    width: 5px; height: 5px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulseDot 2s ease-in-out infinite;
+  }
+
+  @keyframes pulseDot {
+    0%,100% { box-shadow: 0 0 0 0 rgba(58,184,224,0.5); }
+    50% { box-shadow: 0 0 0 5px rgba(58,184,224,0); }
+  }
+
+  .hero-badge-text {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--text-main);
+    letter-spacing: -1px;
+  }
+
+  .logo span { color: var(--accent); font-weight: 600; }
+
+  .logo-sub {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-top: 8px;
+    font-weight: 400;
+  }
+
+  .hero-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: rgba(200,235,250,0.85);
+    margin-top: 20px;
+    line-height: 1.4;
+    font-style: italic;
+  }
+
+  /* ─── DIVIDER ─── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 28px 0;
+    opacity: 0.3;
+  }
+  .divider-line { flex: 1; height: 1px; background: var(--accent); }
+  .divider-dot { width: 4px; height: 4px; background: var(--accent); border-radius: 50%; }
+
+  /* ─── FEATURES STRIP ─── */
+  .features {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 32px;
+    animation: fadeUp 0.7s 0.15s ease both;
+  }
+
+  .feat {
+    flex: 1;
+    text-align: center;
+    padding: 16px 8px;
+    border: 1px solid var(--accent-border);
+    background: var(--accent-soft);
+  }
+  .feat:first-child { border-radius: 8px 0 0 8px; }
+  .feat:last-child  { border-radius: 0 8px 8px 0; border-left: none; }
+  .feat:not(:first-child):not(:last-child) { border-left: none; }
+
+  .feat-icon { font-size: 20px; margin-bottom: 6px; }
+  .feat-label { font-size: 9px; letter-spacing: 1.5px; color: var(--text-muted); text-transform: uppercase; line-height: 1.4; }
+
+  /* ─── SERVICE CARDS ─── */
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+
+  .services {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.7s 0.25s ease both;
+  }
+
+  .service-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(6,40,64,0.6);
+    border: 1px solid var(--accent-border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .service-card:hover {
+    border-color: rgba(58,184,224,0.5);
+    background: rgba(6,40,64,0.9);
+  }
+
+  .service-icon {
+    width: 40px; height: 40px;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-border);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .service-info { flex: 1; }
+
+  .service-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-main);
+    letter-spacing: 0.2px;
+  }
+
+  .service-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    font-weight: 300;
+  }
+
+  .service-arrow {
+    color: var(--accent);
+    font-size: 16px;
+    opacity: 0.6;
+  }
+
+  /* ─── AREA ─── */
+  .area-card {
+    background: rgba(6,40,64,0.5);
+    border: 1px solid var(--accent-border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.7s 0.35s ease both;
+  }
+
+  .area-title {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .area-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .area-tag {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-border);
+    border-radius: 100px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* ─── CONTACT FORM ─── */
+  .contact-section {
+    animation: fadeUp 0.7s 0.45s ease both;
+    margin-bottom: 32px;
+  }
+
+  .form-card {
+    background: rgba(6,40,64,0.7);
+    border: 1px solid var(--accent-border);
+    border-radius: 14px;
+    padding: 28px 24px;
+  }
+
+  .form-header {
+    margin-bottom: 22px;
+  }
+
+  .form-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--text-main);
+    line-height: 1.2;
+  }
+
+  .form-title em {
+    color: var(--accent);
+    font-style: italic;
+  }
+
+  .form-subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  .form-group { margin-bottom: 14px; }
+
+  .form-label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: rgba(2,13,24,0.7);
+    border: 1px solid var(--accent-border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    color: var(--text-main);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    -webkit-appearance: none;
+  }
+
+  .form-input::placeholder, .form-textarea::placeholder {
+    color: var(--text-dim);
+  }
+
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--accent);
+    background: rgba(2,13,24,0.9);
+  }
+
+  .form-select {
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+
+  .form-select option {
+    background: #041e30;
+    color: var(--text-main);
+  }
+
+  .form-textarea {
+    min-height: 90px;
+    resize: vertical;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  /* ─── BUTTONS ─── */
+  .btn-primary {
+    width: 100%;
+    background: linear-gradient(135deg, #1190ba, #2bb3d8);
+    border: none;
+    border-radius: 10px;
+    padding: 16px;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+    position: relative;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
+  }
+
+  .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-primary:active { transform: scale(0.98); }
+
+  .btn-sms {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--accent-border);
+    border-radius: 10px;
+    padding: 14px;
+    color: var(--accent);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+    text-decoration: none;
+  }
+
+  .btn-sms:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  .btn-sms:active { transform: scale(0.98); }
+
+  .btn-call {
+    width: 100%;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 14px;
+    color: var(--text-muted);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+    text-decoration: none;
+  }
+
+  .btn-call:hover {
+    background: rgba(255,255,255,0.05);
+    transform: translateY(-1px);
+  }
+
+  .divider-or {
+    text-align: center;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin: 6px 0;
+  }
+
+  /* ─── SUCCESS STATE ─── */
+  .success-msg {
+    display: none;
+    text-align: center;
+    padding: 20px 10px;
+  }
+
+  .success-icon {
+    font-size: 36px;
+    margin-bottom: 12px;
+  }
+
+  .success-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    color: var(--text-main);
+    margin-bottom: 8px;
+  }
+
+  .success-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* ─── QUICK LINKS ─── */
+  .quick-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.7s 0.55s ease both;
+  }
+
+  .quick-link {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(6,40,64,0.5);
+    border: 1px solid var(--accent-border);
+    border-radius: 10px;
+    padding: 15px 18px;
+    text-decoration: none;
+    color: var(--text-main);
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  }
+
+  .quick-link:hover {
+    background: rgba(6,40,64,0.9);
+    border-color: rgba(58,184,224,0.5);
+    transform: translateX(3px);
+  }
+
+  .quick-link-icon {
+    width: 38px; height: 38px;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-border);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+    flex-shrink: 0;
+  }
+
+  .quick-link-text { flex: 1; }
+  .quick-link-name { font-size: 13px; font-weight: 600; }
+  .quick-link-sub { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+  .quick-link-arrow { color: var(--accent); font-size: 14px; opacity: 0.7; }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    text-align: center;
+    padding: 20px 0 10px;
+    animation: fadeUp 0.7s 0.65s ease both;
+  }
+
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 300;
+    color: rgba(200,235,250,0.4);
+  }
+
+  .footer-logo span { color: rgba(58,184,224,0.5); }
+
+  .footer-copy {
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 6px;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+<div class="wave-container">
+  <div class="wave"></div>
+  <div class="wave"></div>
+  <div class="wave"></div>
+</div>
+<div class="sparkle sp1"></div>
+<div class="sparkle sp2"></div>
+<div class="sparkle sp3"></div>
+<div class="sparkle sp4"></div>
+<div class="sparkle sp5"></div>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">
+      <div class="hero-badge-dot"></div>
+      <span class="hero-badge-text">Licensed &amp; Insured</span>
+    </div>
+    <div class="logo"><span>Beautiful</span><br>Pool Service</div>
+    <div class="logo-sub">Excellence in every visit</div>
+    <div class="hero-tagline">Your pool. Always clean,<br>safe &amp; crystal clear.</div>
+  </div>
+
+  <!-- FEATURES STRIP -->
+  <div class="features">
+    <div class="feat">
+      <div class="feat-icon">💧</div>
+      <div class="feat-label">Balanced<br>Water</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">✅</div>
+      <div class="feat-label">Trained<br>Team</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🕐</div>
+      <div class="feat-label">Always<br>On Time</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🆓</div>
+      <div class="feat-label">Free<br>Estimate</div>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <div class="section-title">Our Services</div>
+  <div class="services">
+    <div class="service-card">
+      <div class="service-icon">🧹</div>
+      <div class="service-info">
+        <div class="service-name">Weekly Cleaning</div>
+        <div class="service-desc">Skimming, brushing, vacuuming &amp; chemical check</div>
+      </div>
+      <div class="service-arrow">›</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">⚗️</div>
+      <div class="service-info">
+        <div class="service-name">Chemical Treatment</div>
+        <div class="service-desc">pH balance, chlorine &amp; water clarity</div>
+      </div>
+      <div class="service-arrow">›</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🔧</div>
+      <div class="service-info">
+        <div class="service-name">Equipment Check</div>
+        <div class="service-desc">Filter, pump &amp; system inspection</div>
+      </div>
+      <div class="service-arrow">›</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🌊</div>
+      <div class="service-info">
+        <div class="service-name">Green Pool Rescue</div>
+        <div class="service-desc">Full shock treatment &amp; recovery</div>
+      </div>
+      <div class="service-arrow">›</div>
+    </div>
+  </div>
+
+  <!-- SERVICE AREA -->
+  <div class="area-card">
+    <div class="area-title">📍 Service Areas</div>
+    <div class="area-tags">
+      <div class="area-tag">📌 Saint Lucie County</div>
+      <div class="area-tag">📌 Martin County</div>
+      <div class="area-tag">📌 Palm Beach County</div>
+    </div>
+  </div>
+
+  <!-- CONTACT FORM -->
+  <div class="contact-section">
+    <div class="section-title">Get a Free Estimate</div>
+    <div class="form-card">
+
+      <div class="form-header">
+        <div class="form-title">Contact us <em>now</em></div>
+        <div class="form-subtitle">Fill out the form and we'll text you back within minutes.</div>
+      </div>
+
+      <div id="form-area">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input type="text" class="form-input" id="fname" placeholder="John" autocomplete="given-name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input type="text" class="form-input" id="lname" placeholder="Smith" autocomplete="family-name">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input type="tel" class="form-input" id="phone" placeholder="(954) 000-0000" autocomplete="tel">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Service Needed</label>
+          <select class="form-select form-input" id="service">
+            <option value="" disabled selected>Select a service...</option>
+            <option value="Weekly Cleaning">Weekly Cleaning</option>
+            <option value="Chemical Treatment">Chemical Treatment</option>
+            <option value="Equipment Check">Equipment Check</option>
+            <option value="Green Pool Rescue">Green Pool Rescue</option>
+            <option value="Free Estimate">Free Estimate</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Message (optional)</label>
+          <textarea class="form-textarea" id="message" placeholder="Tell us about your pool or any questions..."></textarea>
+        </div>
+
+        <button class="btn-primary" onclick="sendSMSForm()">
+          Send via Text Message →
+        </button>
+
+        <div class="divider-or">— or —</div>
+
+        <a class="btn-sms" href="sms:+19547783505">
+          💬 Send a Direct Text
+        </a>
+
+        <a class="btn-call" href="tel:+19547783505">
+          📞 Call (954) 778-3505
+        </a>
+      </div>
+
+      <div class="success-msg" id="success-msg">
+        <div class="success-icon">🎉</div>
+        <div class="success-title">Message sent!</div>
+        <div class="success-sub">Your text is ready to send.<br>We'll get back to you shortly.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- QUICK LINKS -->
+  <div class="section-title">Quick Contact</div>
+  <div class="quick-links">
+    <a class="quick-link" href="tel:+19547783505">
+      <div class="quick-link-icon">📞</div>
+      <div class="quick-link-text">
+        <div class="quick-link-name">Call Us Now</div>
+        <div class="quick-link-sub">(954) 778-3505</div>
+      </div>
+      <div class="quick-link-arrow">›</div>
+    </a>
+    <a class="quick-link" href="sms:+19547783505">
+      <div class="quick-link-icon">💬</div>
+      <div class="quick-link-text">
+        <div class="quick-link-name">Send a Text</div>
+        <div class="quick-link-sub">Quick reply guaranteed</div>
+      </div>
+      <div class="quick-link-arrow">›</div>
+    </a>
+    <a class="quick-link" href="https://wa.me/19547783505" target="_blank">
+      <div class="quick-link-icon">🟢</div>
+      <div class="quick-link-text">
+        <div class="quick-link-name">WhatsApp</div>
+        <div class="quick-link-sub">Chat with us directly</div>
+      </div>
+      <div class="quick-link-arrow">›</div>
+    </a>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-logo"><span>Beautiful</span> Pool Service</div>
+    <div class="footer-copy">Saint Lucie · Martin · Palm Beach &nbsp;|&nbsp; (954) 778-3505</div>
+  </div>
+
+</div>
+
+<script>
+  function sendSMSForm() {
+    var fname   = document.getElementById('fname').value.trim();
+    var lname   = document.getElementById('lname').value.trim();
+    var phone   = document.getElementById('phone').value.trim();
+    var service = document.getElementById('service').value;
+    var message = document.getElementById('message').value.trim();
+
+    if (!fname || !phone || !service) {
+      alert('Please fill in your name, phone number and service needed.');
+      return;
+    }
+
+    var body = 'Hi Beautiful Pool Service!\n\n';
+    body += 'Name: ' + fname + ' ' + lname + '\n';
+    body += 'Phone: ' + phone + '\n';
+    body += 'Service: ' + service + '\n';
+    if (message) body += 'Message: ' + message + '\n';
+    body += '\nPlease contact me for a free estimate. Thank you!';
+
+    var smsLink = 'sms:+19547783505' + (navigator.userAgent.match(/iPhone|iPad/i) ? '&' : '?') + 'body=' + encodeURIComponent(body);
+
+    window.location.href = smsLink;
+
+    setTimeout(function() {
+      document.getElementById('form-area').style.display = 'none';
+      document.getElementById('success-msg').style.display = 'block';
+    }, 1200);
+  }
+</script>
+</body>
+</html>
